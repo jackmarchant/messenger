@@ -1,0 +1,47 @@
+version: '3'
+networks:
+  messaging:
+    driver: bridge
+services:
+  messaging:
+    build:
+      context: .
+    depends_on:
+      - mix
+      - postgres
+    entrypoint: "mix phx.server"
+    environment: &environment
+      PORT: 4000
+      APPLICATION_ENV: dev
+      DATABASE_URL: ecto://postgres:postgres@messaging_postgres_1:5432/postgres
+    networks:
+      - messaging
+    ports:
+      - "4000:4000"
+    working_dir: /usr/src/messaging
+    volumes:
+      - .:/usr/src/messaging
+      - ~/.ssh:/root/.ssh
+  postgres:
+    image: postgres:9.6-alpine
+    ports:
+      - "5543:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    networks:
+        - messaging
+  mix:
+    build:
+      context: .
+    working_dir: /usr/src/messaging
+    environment: *environment
+    volumes:
+      - .:/usr/src/messaging
+      - ~/.ssh:/root/.ssh
+    network_mode: bridge
+volumes:
+  postgres:
+    driver: local
