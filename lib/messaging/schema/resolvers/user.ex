@@ -1,7 +1,15 @@
 defmodule Messaging.Schema.Resolvers.User do
-  alias Messaging.{Repo, User}
+  alias Messaging.{Repo, Models}
+
+  import Ecto.Query
 
   def all(_, _) do
-    {:ok, Repo.all(User)}
+    users = 
+      Models.User
+      |> from
+      |> where([u], u.role == "user")
+      |> Repo.all
+    
+    {:ok, users}
   end
 end
