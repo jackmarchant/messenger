@@ -1,11 +1,21 @@
-# Script for populating the database. You can run it as:
-#
-#     mix run priv/repo/seeds.exs
-#
-# Inside the script, you can read and write to any of your
-# repositories directly:
-#
-#     Messaging.Repo.insert!(%Messaging.SomeSchema{})
-#
-# We recommend using the bang functions (`insert!`, `update!`
-# and so on) as they will fail if something goes wrong.
+alias Messaging.{Repo, User}
+
+Repo.delete_all(User)
+
+Repo.insert!(%User{
+  email: "joeblogs@email.com",
+  firstname: "joe",
+  lastname: "blogs"
+})
+
+Repo.insert!(%User{
+  email: "mattdamon@email.com",
+  firstname: "matt",
+  lastname: "damon"
+})
+
+Repo.insert!(%User{
+  email: "benaffleck@email.com",
+  firstname: "ben",
+  lastname: "affleck"
+})

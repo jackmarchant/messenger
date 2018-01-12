@@ -9,11 +9,11 @@ services:
     depends_on:
       - mix
       - postgres
-    entrypoint: "mix phx.server"
     environment: &environment
       PORT: 4000
       APPLICATION_ENV: dev
       DATABASE_URL: ecto://postgres:postgres@messaging_postgres_1:5432/postgres
+      DATABASE_TEST_URL: ecto://postgres:postgres@messaging_postgres_1:5432/messaging_test
     networks:
       - messaging
     ports:

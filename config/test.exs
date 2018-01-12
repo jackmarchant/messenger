@@ -8,3 +8,12 @@ config :messaging, MessagingWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+config :messaging, Messaging.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  url: System.get_env("DATABASE_TEST_URL"),
+  ssl: false,
+  pool: Ecto.Adapters.SQL.Sandbox,
+  # Prevent timeout during debug sessions with IEx
+  ownership_timeout: 999_999,
+  timeout: 999_999

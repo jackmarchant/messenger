@@ -13,14 +13,15 @@ defmodule MessagingWeb.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/" do
+    forward "/graphiql", Absinthe.Plug.GraphiQL,
+      schema: Messaging.Schema,
+      interface: :simple
+  end
+
   scope "/", MessagingWeb do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", MessagingWeb do
-  #   pipe_through :api
-  # end
 end

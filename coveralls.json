@@ -1,0 +1,31 @@
+{
+  "default_stop_words": [
+    "defmodule",
+    "defrecord",
+    "defimpl",
+    "defexception",
+    "defprotocol",
+    "defstruct",
+    "def.+(.+\\\\.+).+do",
+    "^\\s+use\\s+"
+  ],
+  "coverage_options": {
+    "treat_no_relevant_lines_as_covered": true,
+    "output_dir": "cover"
+  },
+  "terminal_options": {
+    "file_column_width": 40
+  },
+  "skip_files": [
+    "lib/messaging/application.ex",
+    "lib/messaging_web.ex",
+    "lib/messaging_web/views/error_helpers.ex",
+    "lib/messaging_web/views/error_view.ex",
+    "test/support/channel_case.ex",
+    "test/support/conn_case.ex",
+    "test/support/data_case.ex",
+    "lib/messaging_web/router.ex",
+    "lib/messaging_web/controllers/page_controller.ex",
+    "lib/messaging_web/endpoint.ex"
+  ]
+}
