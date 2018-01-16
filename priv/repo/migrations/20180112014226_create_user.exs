@@ -11,5 +11,10 @@ defmodule Messaging.Repo.Migrations.CreateUser do
       timestamps()
     end
     create unique_index(:user, [:email])
+
+    create table(:user_thread) do
+      add :user_id, :integer
+      add :thread_id, :integer
+    end
   end
 end

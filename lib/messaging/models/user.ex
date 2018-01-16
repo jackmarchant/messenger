@@ -2,11 +2,15 @@ defmodule Messaging.Models.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Messaging.Models.Thread
+
   schema "user" do
     field :email, :string
     field :firstname, :string
     field :lastname, :string
     field :role, :string
+
+    has_many :threads, Thread
 
     timestamps()
   end
