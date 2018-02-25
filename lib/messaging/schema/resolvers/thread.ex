@@ -1,6 +1,6 @@
 defmodule Messaging.Schema.Resolvers.Thread do
   alias Messaging.Repo
-  alias Messaging.Models.{Thread, UserThread}
+  alias Messaging.Models.{Thread, UserThread, User}
 
   import Ecto.Query
 
@@ -28,5 +28,28 @@ defmodule Messaging.Schema.Resolvers.Thread do
       |> Repo.all()
 
     {:ok, threads}
+  end
+
+  def create_thread(%{name: name, user_id: creator_id, participants: participants}, _) do
+    user_ids = 
+      [creator_id]
+      |> Enum.concat(participants)
+      |> Enum.map(&String.to_integer/1)
+
+    users = 
+      User
+      |> from()
+      |> where([u], u.id in ^user_ids)
+      |> Repo.all()
+
+    thread =
+      %Thread{name: name}
+      |> Repo.insert!()
+      |> Repo.preload(:participants)
+      |> Ecto.Changeset.change()
+      |> Ecto.Changeset.put_assoc(:participants, users)
+      |> Repo.update!()
+
+    {:ok, %{thread: thread}}
   end
 end

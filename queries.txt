@@ -1,0 +1,51 @@
+{
+  "input": {
+    "clientMutationId": "asdasd",
+    "userId": "VXNlcjo3Nw==",
+    "name": "hello new thread",
+    "participants": ["VXNlcjo3OA=="]
+  }
+}
+
+mutation CreateThread($input: CreateThreadInput!) {
+  createThread(input: $input) {
+    thread {
+      id
+      name
+    }
+  }
+}
+
+query GetUsers {
+  users {
+    id
+    firstname
+    lastname
+    email
+  }
+}
+
+{
+  "data": {
+    "users": [
+      {
+        "lastname": "blogs",
+        "id": "VXNlcjo3Nw==",
+        "firstname": "joe",
+        "email": "joeblogs@email.com"
+      },
+      {
+        "lastname": "damon",
+        "id": "VXNlcjo3OA==",
+        "firstname": "matt",
+        "email": "mattdamon@email.com"
+      },
+      {
+        "lastname": "affleck",
+        "id": "VXNlcjo3OQ==",
+        "firstname": "ben",
+        "email": "benaffleck@email.com"
+      }
+    ]
+  }
+}
