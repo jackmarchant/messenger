@@ -9,7 +9,7 @@ defmodule Messaging.Schema.Resolvers.User do
       |> from
       |> where([u], u.role == "user")
       |> Repo.all
-    
+
     {:ok, users}
   end
 end
