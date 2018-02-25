@@ -2,12 +2,13 @@ defmodule Messaging.Models.Thread do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Messaging.Models.Message
+  alias Messaging.Models.{Message, User}
 
   schema "thread" do
     field :name, :string
     
     has_many :messages, Message
+    many_to_many :participants, User, join_through: "user_thread"
 
     timestamps()
   end

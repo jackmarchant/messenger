@@ -45,5 +45,12 @@ Repo.insert!(%Models.Message{
 Repo.insert!(%Models.Message{
   thread: thread,
   sender: user_one,
-  content: "Hey, this is a message on a thread."
+  content: "Hey, I am responding to your message."
 })
+
+# add participants to the thread
+thread
+|> Repo.preload(:participants)
+|> Ecto.Changeset.change()
+|> Ecto.Changeset.put_assoc(:participants, [user_one, user_two])
+|> Repo.update!()

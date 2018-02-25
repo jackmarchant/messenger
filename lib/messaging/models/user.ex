@@ -10,7 +10,7 @@ defmodule Messaging.Models.User do
     field :lastname, :string
     field :role, :string
 
-    has_many :threads, Thread
+    many_to_many :threads, Thread, join_through: "user_thread"
 
     timestamps()
   end
