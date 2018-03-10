@@ -49,3 +49,45 @@ query GetUsers {
     ]
   }
 }
+
+query GetThreads {
+  threads {
+    id
+    name
+    messages {
+      sender {
+        id
+        firstname
+        lastname
+      }
+      content
+    }
+  }
+  
+  thread(slug: "1520651204") {
+    id
+    name
+    messages {
+      content
+    }
+  }
+}
+
+{
+  "input": {
+    "clientMutationId": "asknasd",
+    "content": "hi dis is a new msg bro, pls respond asap",
+    "userId": "VXNlcjoxMDA=",
+    "threadId": "VGhyZWFkOjU5",
+  }
+}
+
+mutation CreateMessage($input: CreateMessageInput!) {
+  createMessage(input: $input) {
+    thread {
+      messages {
+        content
+      }
+    }
+  }
+}

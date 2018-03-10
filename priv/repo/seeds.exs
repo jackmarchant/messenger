@@ -1,5 +1,6 @@
 alias Messaging.{Repo, Models}
 
+Repo.delete_all(Models.UserThread)
 Repo.delete_all(Models.User)
 Repo.delete_all(Models.Thread)
 Repo.delete_all(Models.Message)
@@ -32,9 +33,10 @@ user_two = Repo.insert!(%Models.User{
   role: "admin"
 })
 
-thread = Repo.insert!(%Models.Thread{
-  name: "My Awesome Thread",
-})
+thread = 
+  %Models.Thread{name: "My Awesome Thread"}
+  |> Models.Thread.changeset()
+  |> Repo.insert!()
 
 Repo.insert!(%Models.Message{
   thread: thread,

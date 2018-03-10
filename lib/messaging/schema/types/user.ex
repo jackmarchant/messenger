@@ -26,7 +26,6 @@ defmodule Messaging.Schema.Types.User do
 
   @desc "A user"
   node object :user do
-    field :id, :id
     field :email, :string
     field :firstname, :string
     field :lastname, :string

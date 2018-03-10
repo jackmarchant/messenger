@@ -40,7 +40,9 @@ defmodule Messaging.Schema do
       resolve &ThreadResolver.all/2
     end
 
+    @desc "A single thread by slug"
     field :thread, :thread do
+      arg :slug, :string
       resolve &ThreadResolver.find_thread/2
     end
   end
@@ -60,6 +62,22 @@ defmodule Messaging.Schema do
 
       middleware ParseIDs, user_id: :user, participants: :user
       resolve &ThreadResolver.create_thread/2
+    end
+
+    @desc "Create a message"
+    payload field :create_message do
+      input do
+        field :user_id, non_null(:id)
+        field :thread_id, non_null(:id)
+        field :content, non_null(:string)
+      end
+      output do
+        field :thread, :thread
+        field :message, :message
+      end
+
+      middleware ParseIDs, user_id: :user, thread_id: :thread
+      resolve &ThreadResolver.create_message/2
     end
   end
 end
