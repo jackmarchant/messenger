@@ -14,6 +14,7 @@ defmodule MessagingWeb.Router do
   end
 
   scope "/" do
+    forward "/graphql", Absinthe.Plug, schema: Messaging.Schema
     forward "/graphiql", Absinthe.Plug.GraphiQL,
       schema: Messaging.Schema,
       interface: :simple

@@ -53,19 +53,20 @@ module.exports = {
     // changing JS code would still trigger a refresh.
   ],
   output: {
-    // Add /* filename */ comments to generated require()s in the output.
-    pathinfo: true,
-    // This does not produce a real file. It's just the virtual path that is
-    // served by WebpackDevServer in development. This is the JS bundle
-    // containing code from all our entry points, and the Webpack runtime.
-    filename: 'static/js/bundle.js',
-    // There are also additional JS chunk files if you use code splitting.
-    chunkFilename: 'static/js/[name].chunk.js',
-    // This is the URL that app is served from. We use "/" in development.
+    // The build folder.
+    path: paths.appBuild,
+    // Generated JS file names (with nested folders).
+    // There will be one main bundle, and one file per asynchronous chunk.
+    // We don't currently advertise code splitting but Webpack supports it.
+    // filename: 'static/js/[name].[chunkhash:8].js',
+    // chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
+    // We inferred the "public path" (such as / or /my-project) from homepage.
     publicPath: publicPath,
     // Point sourcemap entries to original disk location (format as URL on Windows)
     devtoolModuleFilenameTemplate: info =>
-      path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
+      path
+        .relative(paths.appSrc, info.absoluteResourcePath)
+        .replace(/\\/g, '/'),
   },
   resolve: {
     // This allows you to set a fallback for where Webpack should look for modules.
@@ -217,10 +218,10 @@ module.exports = {
     // In development, this will be an empty string.
     new InterpolateHtmlPlugin(env.raw),
     // Generates an `index.html` file with the <script> injected.
-    new HtmlWebpackPlugin({
-      inject: true,
-      template: paths.appHtml,
-    }),
+    // new HtmlWebpackPlugin({
+    //   inject: true,
+    //   template: paths.appHtml,
+    // }),
     // Add module names to factory functions so they appear in browser profiler.
     new webpack.NamedModulesPlugin(),
     // Makes some environment variables available to the JS code, for example:

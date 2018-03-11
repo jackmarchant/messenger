@@ -18,3 +18,5 @@ erl_crash.dump
 .DS_Store
 
 graphql-schema.json
+priv/static/js
+priv/static/css
