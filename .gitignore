@@ -20,3 +20,5 @@ erl_crash.dump
 graphql-schema.json
 priv/static/js
 priv/static/css
+__generated__
+yarn.lock
