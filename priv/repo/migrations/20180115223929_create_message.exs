@@ -1,13 +1,20 @@
-defmodule Messaging.Repo.Migrations.CreateMessage do
+defmodule Messaging.Repo.Migrations.CreateUser do
   use Ecto.Migration
 
   def change do
-    create table(:message) do
-      add :content, :string
-      add :thread_id, :integer
-      add :sender_id, :integer
-      
+    create table(:user) do
+      add :email, :string
+      add :firstname, :string
+      add :lastname, :string
+      add :role, :string
+
       timestamps()
+    end
+    create unique_index(:user, [:email])
+
+    create table(:user_thread) do
+      add :user_id, :integer
+      add :thread_id, :integer
     end
   end
 end

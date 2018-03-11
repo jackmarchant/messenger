@@ -46,6 +46,10 @@ update:
 test:
 	$(MAKE) CMD=test mix
 
+generate-schema: SCHEMA_PATH?=./frontend/graphql-schema.json
+generate-schema:
+	$(MAKE) CMD="absinthe.schema.json --schema Messaging.Schema $(SCHEMA_PATH)" mix
+
 down:
 	$(COMPOSE) down
 

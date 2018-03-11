@@ -16,3 +16,9 @@ erl_crash.dump
 /config/*.secret.exs
 /cover
 .DS_Store
+
+graphql-schema.json
+priv/static/js
+priv/static/css
+__generated__
+yarn.lock

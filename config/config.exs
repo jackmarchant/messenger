@@ -29,6 +29,9 @@ config :messaging, Messaging.Repo,
   ssl: (System.get_env("DATABASE_USE_SSL") || "false") |> String.to_atom,
   pool_size: 5
 
+config :absinthe,
+  schema: Messaging.Schema
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"
