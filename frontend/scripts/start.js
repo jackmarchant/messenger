@@ -49,7 +49,7 @@ build()
   },
   err => {
     console.log(chalk.red('Failed to compile.\n'));
-    printBuildError(err);
+    console.error(err);
     process.exit(1);
   }
 );

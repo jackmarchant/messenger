@@ -5,31 +5,55 @@ import { graphql, QueryRenderer } from 'react-relay';
 import modernEnvironment from './environment';
 import RelayRenderContainer from './RelayRenderContainer';
 
+import getStateFromDOM from './getStateFromDOM';
+
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+import UserList from './UserList';
+import Thread from './Thread';
+
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.initialState = getStateFromDOM('app-state');
+  }
   render() {
+    const { data } = this.props;
     return (
-      <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">Messenger</h1>
-        </header>
-        <div>
-          <h2>Users</h2>
-          {this.props.data.users.map((user, index) => {
-            return (
-              <div key={`user-${index}`}>
-                <p>Email: {user.email}</p>
-                <p>Firstname: {user.firstname}</p>
-                <p>Lastname: {user.lastname}</p>
-                <p>ID: {user.id}</p>
-                <hr />
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      <BrowserRouter basename={this.initialState.basename}>
+        <MuiThemeProvider>
+          <div className="App">
+            <header className="App-header">
+              <h1 className="App-title">Messenger</h1>
+            </header>
+            <div className="container">
+              <Switch>
+                <Route
+                  exact
+                  path="/"
+                  render={() => <UserList data={data} />}
+                />
+                <Route
+                  exact
+                  path="/thread/:slug"
+                  render={Thread}
+                />
+              </Switch>
+            </div>
+          </div>
+        </MuiThemeProvider>
+      </BrowserRouter>
     );
   }
 }
+
+
+const query = graphql`
+  query AppQuery {
+    ...UserList
+  }
+`;
 
 class AppRenderer extends Component {
   state = {
@@ -43,17 +67,6 @@ class AppRenderer extends Component {
     if (this.state.error) {
       return <p>Something went wrong!</p>
     }
-
-    const query = graphql`
-      query AppQuery {
-        users {
-          id
-          firstname
-          lastname
-          email
-        }
-      }
-    `;
 
     return (
       <QueryRenderer

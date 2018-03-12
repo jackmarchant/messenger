@@ -2,6 +2,7 @@ defmodule MessagingWeb.PageController do
   use MessagingWeb, :controller
 
   def index(conn, _params) do
-    render conn, "index.html"
+    props = %{}
+    render conn, "index.html", props: props
   end
 end

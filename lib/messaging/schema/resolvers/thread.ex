@@ -52,6 +52,7 @@ defmodule Messaging.Schema.Resolvers.Thread do
 
     thread =
       %Thread{name: name}
+      |> Thread.changeset()
       |> Repo.insert!()
       |> Repo.preload(:participants)
       |> Ecto.Changeset.change()
