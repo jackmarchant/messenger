@@ -61,6 +61,7 @@ defmodule Messaging.Mixfile do
       "test": ["ecto.create --quiet", "ecto.migrate", "test"],
       "graphql.schema": [
         "loadpaths", 
+        "compile",
         "absinthe.schema.json --schema Messaging.Schema ./frontend/graphql-schema.json"
       ],
     ]

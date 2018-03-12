@@ -13,3 +13,24 @@
 .App-intro {
   font-size: large;
 }
+
+.container {
+  width: 90%;
+  margin: auto;
+}
+
+
+/** 
+ * `l-flex-grid`
+**/
+
+.l-flex-grid {
+  display: flex;
+  flex-flow: row wrap;
+  margin-left: -12px;
+}
+
+.l-flex-grid__item {
+  flex-basis: auto;
+  padding-left: 12px;
+}

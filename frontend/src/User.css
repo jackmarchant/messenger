@@ -1,0 +1,7 @@
+/**
+ * User
+**/
+
+.c-user__name {
+  text-transform: capitalize;
+}

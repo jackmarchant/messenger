@@ -39,6 +39,7 @@ defmodule Messaging.Schema.Types.Thread do
   @desc "A Thread"
   node object :thread do
     field :name, :string
+    field :slug, :string
     field :messages, list_of(:message), resolve: &resolve_messages/3
     field :participants, list_of(:user), resolve: &resolve_participants/3
   end

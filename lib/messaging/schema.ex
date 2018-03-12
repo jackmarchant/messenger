@@ -26,7 +26,7 @@ defmodule Messaging.Schema do
   end
 
   @desc "Queries"
-  query do
+  query(name: "Query") do
     @desc "A list of users"
     field :users, list_of(:user) do
       resolve &UserResolver.all/2
