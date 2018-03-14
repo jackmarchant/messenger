@@ -38,7 +38,7 @@ defmodule Messaging.Schema.Resolvers.Thread do
     {:ok, threads}
   end
 
-  def create_thread(%{name: name, user_id: creator_id, participants: participants}, _) do
+  def create_thread(%{user_id: creator_id, participants: participants}, _) do
     user_ids = 
       [creator_id]
       |> Enum.concat(participants)
@@ -51,7 +51,7 @@ defmodule Messaging.Schema.Resolvers.Thread do
       |> Repo.all()
 
     thread =
-      %Thread{name: name}
+      %Thread{}
       |> Thread.changeset()
       |> Repo.insert!()
       |> Repo.preload(:participants)

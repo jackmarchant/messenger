@@ -34,7 +34,7 @@ user_two = Repo.insert!(%Models.User{
 })
 
 thread = 
-  %Models.Thread{name: "My Awesome Thread"}
+  %Models.Thread{}
   |> Models.Thread.changeset()
   |> Repo.insert!()
 
