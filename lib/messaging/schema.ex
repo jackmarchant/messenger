@@ -54,7 +54,6 @@ defmodule Messaging.Schema do
       input do
         field :user_id, non_null(:id)
         field :participants, list_of(non_null(:id))
-        field :name, non_null(:string)
       end
       output do
         field :thread, :thread

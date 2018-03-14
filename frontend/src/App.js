@@ -10,7 +10,7 @@ import getStateFromDOM from './getStateFromDOM';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import UserList from './UserList';
+import Dashboard from './Dashboard';
 import Thread from './Thread';
 
 class App extends Component {
@@ -32,7 +32,7 @@ class App extends Component {
                 <Route
                   exact
                   path="/"
-                  render={() => <UserList data={data} />}
+                  render={() => <Dashboard data={data} />}
                 />
                 <Route
                   exact
@@ -52,6 +52,7 @@ class App extends Component {
 const query = graphql`
   query AppQuery {
     ...UserList
+    ...ThreadList
   }
 `;
 

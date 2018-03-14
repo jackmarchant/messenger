@@ -22,3 +22,4 @@ priv/static/js
 priv/static/css
 **/__generated__
 yarn.lock
+node_modules
