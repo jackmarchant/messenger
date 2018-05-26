@@ -1,7 +1,19 @@
+.messages {
+  overflow-y: scroll;
+  max-height: 500px;
+}
+
 .message-list {
   margin-bottom: 10px;
 }
 
 .message {
   padding: 25px 10px;
+  background-color: #9b9bf3;
+  color: white;
+  margin: 15px 0;
+  border-radius: 5px;
+  border-bottom-right-radius: 0px;
+  margin-right: 50%;
+  max-width: 360px;
 }
