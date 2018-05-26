@@ -17,7 +17,7 @@ const RelayRenderContainer = (
       return errorHandler(errors);
     } else {
       return (
-        <div className="c-loading">
+        <div className="loading">
           <p>
             Loading...
           </p>

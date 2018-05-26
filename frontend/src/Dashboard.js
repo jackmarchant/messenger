@@ -1,6 +1,4 @@
 import React, { Fragment } from 'react';
-import { withRouter } from 'react-router';
-
 import UserList from './UserList';
 import ThreadList from './ThreadList';
 

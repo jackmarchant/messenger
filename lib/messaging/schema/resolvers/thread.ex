@@ -5,7 +5,7 @@ defmodule Messaging.Schema.Resolvers.Thread do
   import Ecto.Query
 
   def find_thread(%{slug: slug}, _) do
-    thread = 
+    thread =
       Thread
       |> where([t], t.slug == ^slug)
       |> Repo.one()
@@ -15,8 +15,7 @@ defmodule Messaging.Schema.Resolvers.Thread do
 
   def all(%{user_id: user_id}, _) do
     uid = String.to_integer(user_id)
-
-    threads = 
+    threads =
       Thread
       |> join(
         :inner,
@@ -30,21 +29,20 @@ defmodule Messaging.Schema.Resolvers.Thread do
   end
 
   def all(_, _) do
-    threads = 
+    threads =
       Thread
-      |> from()
       |> Repo.all()
 
     {:ok, threads}
   end
 
   def create_thread(%{user_id: creator_id, participants: participants}, _) do
-    user_ids = 
+    user_ids =
       [creator_id]
       |> Enum.concat(participants)
       |> Enum.map(&String.to_integer/1)
 
-    users = 
+    users =
       User
       |> from()
       |> where([u], u.id in ^user_ids)
@@ -66,17 +64,17 @@ defmodule Messaging.Schema.Resolvers.Thread do
     t_id = String.to_integer(thread_id)
     s_id = String.to_integer(sender_id)
 
-    thread = 
+    thread =
       Thread
       |> where([t], t.id == ^t_id)
       |> Repo.one()
 
-    sender = 
+    sender =
       User
       |> where([u], u.id == ^s_id)
       |> Repo.one()
 
-    message = 
+    message =
       %Message{
         thread: thread,
         sender: sender,

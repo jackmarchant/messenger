@@ -11,7 +11,7 @@ defmodule Messaging.Schema.Types.Thread do
   alias Messaging.Repo
 
   def resolve_participants(%Thread{id: thread_id}, _, _) do
-    participants = 
+    participants =
       User
       |> from()
       |> join(
@@ -27,7 +27,7 @@ defmodule Messaging.Schema.Types.Thread do
   end
 
   def resolve_messages(%Thread{id: thread_id}, _, _) do
-    messages = 
+    messages =
       Message
       |> from()
       |> where([m], m.thread_id == ^thread_id)

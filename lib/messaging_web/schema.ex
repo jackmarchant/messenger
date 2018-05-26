@@ -1,4 +1,4 @@
-defmodule Messaging.Schema do
+defmodule MessagingWeb.Schema do
   use Absinthe.Schema
   use Absinthe.Relay.Schema, :classic
 
@@ -35,7 +35,7 @@ defmodule Messaging.Schema do
     @desc "A list of threads"
     field :threads, list_of(:thread) do
       arg :user_id, :id
-      
+
       middleware ParseIDs, user_id: :user
       resolve &ThreadResolver.all/2
     end
@@ -49,7 +49,7 @@ defmodule Messaging.Schema do
 
   @desc "Mutations"
   mutation(name: "Mutation") do
-    @desc "Create a thread" 
+    @desc "Create a thread"
     payload field :create_thread do
       input do
         field :user_id, non_null(:id)
