@@ -25,5 +25,6 @@ defmodule MessagingWeb.Router do
 
     get "/", PageController, :index
     get "/thread/:slug", ThreadController, :show
+    get "/signup", PageController, :index
   end
 end

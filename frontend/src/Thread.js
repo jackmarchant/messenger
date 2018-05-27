@@ -3,10 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { graphql, QueryRenderer, createRefetchContainer } from 'react-relay';
 import modernEnvironment from './environment';
 import RelayRenderContainer from './RelayRenderContainer';
-
 import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
-
 import CreateMessageMutation from './CreateMessageMutation';
 
 import './Message.css';
@@ -99,7 +96,7 @@ class Thread extends React.Component {
   }
 
   render() {
-    const { name, messages, id, slug } = this.props.data.thread;
+    const { messages, id, slug } = this.props.data.thread;
 
     return (
       <Fragment>

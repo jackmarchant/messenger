@@ -73,14 +73,18 @@ defmodule Messaging.Schema.Resolvers.Thread do
       |> where([u], u.id == ^s_id)
       |> Repo.one()
 
-    message =
-      %Message{
-        thread: thread,
-        sender: sender,
-        content: content
-      }
-      |> Repo.insert!()
+    case sender do
+      nil -> {:error, "cannot create message, invalid user id"}
+      sender ->
+        message =
+          %Message{
+            thread: thread,
+            sender: sender,
+            content: content
+          }
+          |> Repo.insert!()
 
-    {:ok, %{thread: thread, message: message}}
+        {:ok, %{thread: thread, message: message}}
+    end
   end
 end

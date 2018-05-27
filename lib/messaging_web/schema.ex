@@ -78,5 +78,19 @@ defmodule MessagingWeb.Schema do
       middleware ParseIDs, user_id: :user, thread_id: :thread
       resolve &ThreadResolver.create_message/2
     end
+
+    @desc "Create a user"
+    payload field :create_user do
+      input do
+        field :firstname, non_null(:string)
+        field :lastname, non_null(:string)
+        field :email, non_null(:string)
+        field :password, non_null(:string)
+      end
+      output do
+        field :user, :user
+      end
+      resolve &UserResolver.create_user/2
+    end
   end
 end

@@ -64,7 +64,7 @@ defmodule Messaging.Mixfile do
       "graphql.schema": [
         "loadpaths",
         "compile",
-        "absinthe.schema.json --schema Messaging.Schema ./frontend/graphql-schema.json"
+        "absinthe.schema.json --schema MessagingWeb.Schema ./frontend/graphql-schema.json"
       ],
     ]
   end

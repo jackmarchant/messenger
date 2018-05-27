@@ -12,6 +12,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import Dashboard from './Dashboard';
 import Thread from './Thread';
+import Signup from './Signup';
 
 class App extends Component {
   constructor(props) {
@@ -33,6 +34,11 @@ class App extends Component {
                   exact
                   path="/"
                   render={() => <Dashboard data={data} />}
+                />
+                <Route
+                  exact
+                  path="/signup"
+                  render={() => <Signup />}
                 />
                 <Route
                   exact
