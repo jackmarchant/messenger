@@ -42,7 +42,7 @@ defmodule Messaging.Schema.Resolvers.Thread do
       |> Enum.concat(participants)
       |> Enum.map(&String.to_integer/1)
 
-    users =
+    participants =
       User
       |> from()
       |> where([u], u.id in ^user_ids)
@@ -50,12 +50,11 @@ defmodule Messaging.Schema.Resolvers.Thread do
 
     thread =
       %Thread{}
-      |> Thread.changeset()
+      |> Thread.changeset(%{
+        slug: Thread.generate_slug(),
+        participants: participants,
+      })
       |> Repo.insert!()
-      |> Repo.preload(:participants)
-      |> Ecto.Changeset.change()
-      |> Ecto.Changeset.put_assoc(:participants, users)
-      |> Repo.update!()
 
     {:ok, %{thread: thread}}
   end
