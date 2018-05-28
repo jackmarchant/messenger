@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import NavLink from 'react-router-dom/NavLink';
+import Link from 'react-router-dom/Link';
 import withRouter from 'react-router-dom/withRouter';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -9,7 +9,7 @@ const Error = () => {
   return (
     <Fragment>
       <p>Unable to login. Either your login credentials are incorrect, or the user doesn't exist.</p>
-      <p>If you don't have a login, please <NavLink to="/signup">Sign up</NavLink></p>
+      <p>If you don't have a login, please <Link to="/signup">Sign up</Link></p>
     </Fragment>
   );
 };
@@ -39,7 +39,6 @@ class Login extends React.Component {
         return this.setState({ error: "Invalid login credentials or user doesn't exist" });
       }
 
-      // TODO: change to use context
       window.localStorage.setItem('SessionToken', result.login.session.token);
       this.setState(this.getInitialState());
       history.push('/');
@@ -58,7 +57,7 @@ class Login extends React.Component {
 
     return (
       <Fragment>
-        <NavLink to="/">Back</NavLink>
+        <Link to="/">Back</Link>
         <div>
           <h2>Log in</h2>
           {error && <Error />}

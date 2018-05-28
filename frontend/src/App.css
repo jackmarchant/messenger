@@ -6,6 +6,17 @@
   color: white;
 }
 
+.sign-out {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  color: white;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  font-size: 14px;
+}
+
 .App-title {
   font-size: 1.5em;
 }

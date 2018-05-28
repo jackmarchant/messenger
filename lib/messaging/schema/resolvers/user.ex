@@ -3,12 +3,11 @@ defmodule Messaging.Schema.Resolvers.User do
 
   import Ecto.Query
 
-  def all(_, %{context: %{current_user: _}}) do
+  def all(_, %{context: %{current_user: current_user}}) do
     users =
       Models.User
-      |> from
-      |> where([u], u.role == "user")
-      |> Repo.all
+      |> where([u], u.id != ^current_user.id)
+      |> Repo.all()
 
     {:ok, users}
   end
@@ -17,14 +16,10 @@ defmodule Messaging.Schema.Resolvers.User do
     {:error, "Not Authorized"}
   end
 
-  def find_by_token(%{token: token}, _) do
-    user =
-      Models.User
-      |> join(:inner, [u], s in Models.Session, s.user_id == u.id)
-      |> where([_, s], s.token == ^token)
-      |> select([u], u)
-      |> Repo.one()
+  def find_by_token(%{token: nil}, _), do: {:ok, nil}
 
+  def find_by_token(%{token: token}, _) do
+    {:ok, user, _} = Messaging.Guardian.resource_from_token(token)
     {:ok, user}
   end
 

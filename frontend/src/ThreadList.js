@@ -7,7 +7,6 @@ import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bu
 class ThreadList extends React.Component {
   render() {
     const { data, history } = this.props;
-    console.log(data, 'data');
 
     if (!data.threads || data.threads.length === 0) {
       return null;

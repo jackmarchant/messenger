@@ -16,7 +16,7 @@ defmodule MessagingWeb.Router do
   pipeline :graphql do
     plug Guardian.Plug.Pipeline, module: Messaging.Guardian, error_handler: MessagingWeb.AuthErrorHandler
     plug Guardian.Plug.VerifyHeader
-    plug Guardian.Plug.LoadResource
+    plug Guardian.Plug.LoadResource, allow_blank: true
     plug MessagingWeb.ContextPlug
   end
 

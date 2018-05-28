@@ -35,6 +35,7 @@ defmodule MessagingWeb.Schema do
 
     field :user, :user do
       arg :token, :string
+
       resolve &UserResolver.find_by_token/2
     end
 
@@ -49,6 +50,7 @@ defmodule MessagingWeb.Schema do
     @desc "A single thread by slug"
     field :thread, :thread do
       arg :slug, :string
+
       resolve &ThreadResolver.find_thread/2
     end
   end
@@ -65,7 +67,7 @@ defmodule MessagingWeb.Schema do
         field :thread, :thread
       end
 
-      middleware ParseIDs, user_id: :user, participants: :user
+      middleware ParseIDs, user_id: :user
       resolve &ThreadResolver.create_thread/2
     end
 

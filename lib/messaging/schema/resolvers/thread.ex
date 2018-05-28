@@ -16,16 +16,16 @@ defmodule Messaging.Schema.Resolvers.Thread do
     {:error, "Not authorised"}
   end
 
-  def all(%{user_id: user_id}, %{context: %{current_user: _current_user}}) do
-    uid = String.to_integer(user_id)
+  def all(_, %{context: %{current_user: current_user}}) do
     threads =
       Thread
       |> join(
         :inner,
         [t],
         ut in UserThread,
-        ut.user_id == ^uid
+        ut.thread_id == t.id
       )
+      |> where([_, ut], ut.user_id == ^current_user.id)
       |> Repo.all()
 
     {:ok, threads}
@@ -34,11 +34,8 @@ defmodule Messaging.Schema.Resolvers.Thread do
     {:error, "Not authorised"}
   end
 
-  def create_thread(%{user_id: creator_id, participants: participants}, _) do
-    user_ids =
-      [creator_id]
-      |> Enum.concat(participants)
-      |> Enum.map(&String.to_integer/1)
+  def create_thread(%{user_id: user_id}, %{context: %{current_user: current_user}}) do
+    user_ids = [current_user.id, String.to_integer(user_id)]
 
     participants =
       User

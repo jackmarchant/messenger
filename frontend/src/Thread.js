@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { graphql, QueryRenderer, createRefetchContainer } from 'react-relay';
 import modernEnvironment from './environment';
 import RelayRenderContainer from './RelayRenderContainer';
@@ -97,11 +97,10 @@ class Thread extends React.Component {
   render() {
     const { data } = this.props;
     const { messages, id, slug } = data.thread;
-    const userId = data.user.id;
 
     return (
       <Fragment>
-        <NavLink to="/">Back to threads</NavLink>
+        <Link to="/">Back to threads</Link>
         <h2>Your conversation</h2>
         <div className="messages" ref={this.createMessagesListRef}>
           {messages.map((message, key) => <Fragment key={`message-${key}`}><Message {...message} /></Fragment>)}

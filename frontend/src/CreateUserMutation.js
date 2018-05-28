@@ -6,6 +6,8 @@ const mutation = graphql`
     createUser(input: $input) {
       user {
         id
+        firstname
+        lastname
       }
     }
   }

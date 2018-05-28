@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
-import NavLink from 'react-router-dom/NavLink';
+import Link from 'react-router-dom/Link';
+import withRouter from 'react-router-dom/withRouter';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import CreateUserMutation from './CreateUserMutation';
@@ -23,11 +24,12 @@ class Signup extends React.Component {
   }
 
   onSubmit(event) {
+    const { history } = this.props;
     event.preventDefault();
     CreateUserMutation.commit(this.state)
     .then(result => {
-      console.log({ result });
       this.setState(this.getInitialState());
+      history.push('/login');
     });
     return false;
   }
@@ -39,7 +41,7 @@ class Signup extends React.Component {
   render() {
     return (
       <Fragment>
-        <NavLink to="/">Back</NavLink>
+        <Link to="/">Back</Link>
         <div>
           <h2>Sign Up</h2>
           <form onSubmit={this.onSubmit} autoComplete="off">
@@ -89,4 +91,4 @@ class Signup extends React.Component {
   }
 }
 
-export default Signup;
+export default withRouter(Signup);
