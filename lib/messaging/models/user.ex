@@ -3,9 +3,12 @@ defmodule Messaging.Models.User do
   import Ecto.Changeset
 
   alias Messaging.Models.Thread
+  alias Comeonin.Bcrypt
 
   schema "user" do
     field :email, :string
+    field :password, :string, virtual: true
+    field :password_hash, :string
     field :firstname, :string
     field :lastname, :string
     field :role, :string
@@ -17,8 +20,18 @@ defmodule Messaging.Models.User do
 
   def changeset(%__MODULE__{} = user, attrs) do
     user
-    |> cast(attrs, [:email, :firstname, :lastname, :role])
-    |> validate_required([:email, :firstname, :lastname, :role])
+    |> cast(attrs, [:email, :firstname, :lastname, :role, :password])
+    |> validate_required([:email, :firstname, :lastname, :role, :password])
     |> unique_constraint(:email)
+    |> generate_password_hash()
+  end
+
+  defp generate_password_hash(changeset) do
+    case changeset do
+      %Ecto.Changeset{valid?: true, changes: %{password: password}} ->
+        put_change(changeset, :password_hash, Bcrypt.hashpwsalt(password))
+      _ ->
+        changeset
+    end
   end
 end

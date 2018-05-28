@@ -1,12 +1,9 @@
 import React, { Fragment } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { graphql, QueryRenderer, createRefetchContainer } from 'react-relay';
 import modernEnvironment from './environment';
 import RelayRenderContainer from './RelayRenderContainer';
-
 import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
-
 import CreateMessageMutation from './CreateMessageMutation';
 
 import './Message.css';
@@ -46,8 +43,7 @@ class MessageBox extends React.Component {
 
   onSubmit(e) {
     e.preventDefault();
-    // replace with current user user id
-    this.sendMessage('VXNlcjoy', this.props.threadId);
+    this.sendMessage(this.props.userId, this.props.threadId);
     return false;
   }
 
@@ -99,16 +95,17 @@ class Thread extends React.Component {
   }
 
   render() {
-    const { name, messages, id, slug } = this.props.data.thread;
+    const { data } = this.props;
+    const { messages, id, slug } = data.thread;
 
     return (
       <Fragment>
-        <NavLink to="/">Back to threads</NavLink>
+        <Link to="/">Back to threads</Link>
         <h2>Your conversation</h2>
         <div className="messages" ref={this.createMessagesListRef}>
           {messages.map((message, key) => <Fragment key={`message-${key}`}><Message {...message} /></Fragment>)}
         </div>
-        <MessageBox threadId={id} onSendMessage={() => this.refetchData(slug)} />
+        <MessageBox userId={data.user.id} threadId={id} onSendMessage={() => this.refetchData(slug)} />
       </Fragment>
     );
   }
@@ -121,6 +118,7 @@ const RefetchableThread = createRefetchContainer(
     fragment Thread on Query
     @argumentDefinitions(
       slug: { type: String }
+      token: { type: String }
     ) {
       thread(slug: $slug) {
         id
@@ -129,14 +127,18 @@ const RefetchableThread = createRefetchContainer(
           content
         }
       }
+      user(token: $token) {
+        id
+      }
     }
   `,
   graphql`
     query ThreadRefetchQuery(
       $slug: String!
+      $token: String!
     ) {
       ...Thread
-        @arguments(slug: $slug)
+        @arguments(slug: $slug, token: $token)
     }
   `
 );
@@ -144,18 +146,20 @@ const RefetchableThread = createRefetchContainer(
 const query = graphql`
   query ThreadQuery(
     $slug: String!
+    $token: String!
   ) {
     ...Thread
-      @arguments(slug: $slug)
+      @arguments(slug: $slug, token: $token)
   }
 `;
 
 const ThreadRenderer = ({ match }) => {
+  const token = window.localStorage.getItem('SessionToken');
   return (
     <QueryRenderer
       environment={modernEnvironment}
       query={query}
-      variables={{slug: match.params.slug}}
+      variables={{slug: match.params.slug, token}}
       render={RelayRenderContainer(props => {
         return <RefetchableThread {...props} />;
       })}

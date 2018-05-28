@@ -8,13 +8,15 @@ import { List, Subheader, ListItem, Avatar } from 'material-ui';
 const createThreadWithUser = (userId, history) => {
   CreateThreadMutation.commit({
     userId,
-    participants: [userId], // need to add "current user"
   }).then(response => {
     history.push(`/thread/${get(response, 'createThread.thread.slug')}`)
   });
 };
 
 const UserList = ({ data, history }) => {
+  if (!data.users) {
+    return null;
+  }
   return (
     <List>
       <Subheader><h2>Contacts</h2></Subheader>

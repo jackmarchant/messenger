@@ -4,7 +4,7 @@ defmodule Messaging.Schema.Resolvers.Thread do
 
   import Ecto.Query
 
-  def find_thread(%{slug: slug}, _) do
+  def find_thread(%{slug: slug}, %{context: %{current_user: _current_user}}) do
     thread =
       Thread
       |> where([t], t.slug == ^slug)
@@ -12,37 +12,32 @@ defmodule Messaging.Schema.Resolvers.Thread do
 
     {:ok, thread}
   end
+  def find_thread(_, _) do
+    {:error, "Not authorised"}
+  end
 
-  def all(%{user_id: user_id}, _) do
-    uid = String.to_integer(user_id)
+  def all(_, %{context: %{current_user: current_user}}) do
     threads =
       Thread
       |> join(
         :inner,
         [t],
         ut in UserThread,
-        ut.user_id == ^uid
+        ut.thread_id == t.id
       )
+      |> where([_, ut], ut.user_id == ^current_user.id)
       |> Repo.all()
 
     {:ok, threads}
   end
-
   def all(_, _) do
-    threads =
-      Thread
-      |> Repo.all()
-
-    {:ok, threads}
+    {:error, "Not authorised"}
   end
 
-  def create_thread(%{user_id: creator_id, participants: participants}, _) do
-    user_ids =
-      [creator_id]
-      |> Enum.concat(participants)
-      |> Enum.map(&String.to_integer/1)
+  def create_thread(%{user_id: user_id}, %{context: %{current_user: current_user}}) do
+    user_ids = [current_user.id, String.to_integer(user_id)]
 
-    users =
+    participants =
       User
       |> from()
       |> where([u], u.id in ^user_ids)
@@ -50,12 +45,11 @@ defmodule Messaging.Schema.Resolvers.Thread do
 
     thread =
       %Thread{}
-      |> Thread.changeset()
+      |> Thread.changeset(%{
+        slug: Thread.generate_slug(),
+        participants: participants,
+      })
       |> Repo.insert!()
-      |> Repo.preload(:participants)
-      |> Ecto.Changeset.change()
-      |> Ecto.Changeset.put_assoc(:participants, users)
-      |> Repo.update!()
 
     {:ok, %{thread: thread}}
   end
@@ -74,14 +68,18 @@ defmodule Messaging.Schema.Resolvers.Thread do
       |> where([u], u.id == ^s_id)
       |> Repo.one()
 
-    message =
-      %Message{
-        thread: thread,
-        sender: sender,
-        content: content
-      }
-      |> Repo.insert!()
+    case sender do
+      nil -> {:error, "cannot create message, invalid user id"}
+      sender ->
+        message =
+          %Message{
+            thread: thread,
+            sender: sender,
+            content: content
+          }
+          |> Repo.insert!()
 
-    {:ok, %{thread: thread, message: message}}
+        {:ok, %{thread: thread, message: message}}
+    end
   end
 end

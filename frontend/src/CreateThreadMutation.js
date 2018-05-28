@@ -16,14 +16,12 @@ let tempID = 0;
 export default {
   commit: (inputVariables, config = {}) => {
     return new Promise((resolve, reject) => {
-      const { userId, name, participants } = inputVariables;
+      const { userId } = inputVariables;
       commitMutation(modernEnvironment, {
         mutation,
         variables: {
           input: {
             userId,
-            name,
-            participants, 
             clientMutationId: `createThread${tempID++}`,
           },
         },
@@ -36,7 +34,7 @@ export default {
         //   const proxy = store.getRoot();
         //   const conn = ConnectionHandler.getConnection(
         //     proxy,
-        //     'ThreadList_threadsUnlisted'
+        //     'ThreadList'
         //   );
         //   ConnectionHandler.insertEdgeBefore(conn, newEdge);
         // },

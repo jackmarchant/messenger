@@ -6,7 +6,7 @@ defmodule Messaging.Models.Thread do
 
   schema "thread" do
     field :slug, :string
-    
+
     has_many :messages, Message
     many_to_many :participants, User, join_through: "user_thread"
 
@@ -15,17 +15,14 @@ defmodule Messaging.Models.Thread do
 
   def changeset(%__MODULE__{} = thread, attrs \\ %{}) do
     thread
-    |> generate_slug()
-    |> cast(attrs, [])
-    |> validate_required([:slug])
+    |> cast(attrs, [:slug])
+    |> put_assoc(:participants, attrs[:participants])
+    |> validate_required([:slug, :participants])
   end
 
-  defp generate_slug(%__MODULE__{} = thread) do
-    slug = 
-      DateTime.utc_now() 
-      |> DateTime.to_unix()
-      |> Integer.to_string()
-
-    %{thread | slug: slug}
+  def generate_slug do
+    DateTime.utc_now()
+    |> DateTime.to_unix()
+    |> Integer.to_string()
   end
 end

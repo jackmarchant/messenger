@@ -9,7 +9,7 @@ defmodule Messaging.Schema.Types.User do
   import Ecto.Query
 
   def resolve_threads(%User{id: user_id}, _, _) do
-    threads = 
+    threads =
       Thread
       |> from()
       |> join(

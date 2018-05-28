@@ -5,7 +5,7 @@ defmodule Messaging.Mixfile do
     [
       app: :messaging,
       version: "0.0.1",
-      elixir: "~> 1.4",
+      elixir: "~> 1.6",
       elixirc_paths: elixirc_paths(Mix.env),
       compilers: [:phoenix, :gettext] ++ Mix.compilers,
       start_permanent: Mix.env == :prod,
@@ -51,6 +51,9 @@ defmodule Messaging.Mixfile do
       {:poison, "~> 3.1.0"},
       {:excoveralls, "~> 0.7", only: [:test]},
       {:ex_machina, "~> 2.1", only: :test},
+      {:bcrypt_elixir, "~> 1.0"},
+      {:comeonin, "~> 4.0"},
+      {:guardian, "~> 1.0"},
     ]
   end
 
@@ -60,9 +63,9 @@ defmodule Messaging.Mixfile do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       "test": ["ecto.create --quiet", "ecto.migrate", "test"],
       "graphql.schema": [
-        "loadpaths", 
+        "loadpaths",
         "compile",
-        "absinthe.schema.json --schema Messaging.Schema ./frontend/graphql-schema.json"
+        "absinthe.schema.json --schema MessagingWeb.Schema ./frontend/graphql-schema.json"
       ],
     ]
   end

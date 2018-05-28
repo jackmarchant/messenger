@@ -1,58 +1,79 @@
-alias Messaging.{Repo, Models}
+defmodule Seeder do
+  alias Messaging.{Repo, Models}
 
-Repo.delete_all(Models.UserThread)
-Repo.delete_all(Models.User)
-Repo.delete_all(Models.Thread)
-Repo.delete_all(Models.Message)
+  defp insert(:message, attrs) do
+    %Models.Message{}
+    |> Models.Message.changeset(attrs)
+    |> Repo.insert!()
+  end
 
-Repo.insert!(%Models.User{
-  email: "joeblogs@email.com",
-  firstname: "joe",
-  lastname: "blogs",
-  role: "user"
-})
+  defp insert(:thread, attrs) do
+    %Models.Thread{}
+    |> Models.Thread.changeset(attrs)
+    |> Repo.insert!()
+  end
 
-Repo.insert!(%Models.User{
-  email: "mattdamon@email.com",
-  firstname: "matt",
-  lastname: "damon",
-  role: "user"
-})
+  defp insert(:user, attrs) do
+    %Models.User{}
+    |> Models.User.changeset(attrs)
+    |> Repo.insert!()
+  end
 
-user_one = Repo.insert!(%Models.User{
-  email: "benaffleck@email.com",
-  firstname: "ben",
-  lastname: "affleck",
-  role: "user"
-})
+  def run do
+    Repo.delete_all(Models.UserThread)
+    Repo.delete_all(Models.User)
+    Repo.delete_all(Models.Thread)
+    Repo.delete_all(Models.Message)
 
-user_two = Repo.insert!(%Models.User{
-  email: "jack@jackmarchant.com",
-  firstname: "jack",
-  lastname: "marchant",
-  role: "admin"
-})
+    insert(:user, %{
+      email: "joeblogs@email.com",
+      password: "hellworld",
+      firstname: "joe",
+      lastname: "blogs",
+      role: "user",
+    })
 
-thread = 
-  %Models.Thread{}
-  |> Models.Thread.changeset()
-  |> Repo.insert!()
+    insert(:user, %{
+      email: "mattdamon@email.com",
+      password: "benaffleck",
+      firstname: "matt",
+      lastname: "damon",
+      role: "user"
+    })
 
-Repo.insert!(%Models.Message{
-  thread: thread,
-  sender: user_two,
-  content: "Hey, this is a message on a thread."
-})
+    user_one = insert(:user, %{
+      email: "benaffleck@email.com",
+      password: "mattdamon",
+      firstname: "ben",
+      lastname: "affleck",
+      role: "user"
+    })
 
-Repo.insert!(%Models.Message{
-  thread: thread,
-  sender: user_one,
-  content: "Hey, I am responding to your message."
-})
+    user_two = insert(:user, %{
+      email: "jack@jackmarchant.com",
+      password: "password123",
+      firstname: "jack",
+      lastname: "marchant",
+      role: "admin"
+    })
 
-# add participants to the thread
-thread
-|> Repo.preload(:participants)
-|> Ecto.Changeset.change()
-|> Ecto.Changeset.put_assoc(:participants, [user_one, user_two])
-|> Repo.update!()
+    thread = insert(:thread, %{
+      slug: Models.Thread.generate_slug(),
+      participants: [user_one, user_two]
+    })
+
+    insert(:message, %{
+      thread: thread,
+      sender: user_two,
+      content: "Hey, this is a message on a thread."
+    })
+
+    insert(:message, %{
+      thread: thread,
+      sender: user_one,
+      content: "Hey, I am responding to your message."
+    })
+  end
+end
+
+Seeder.run()

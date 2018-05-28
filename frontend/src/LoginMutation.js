@@ -2,10 +2,10 @@ import { graphql, commitMutation } from 'react-relay';
 import modernEnvironment from './environment';
 
 const mutation = graphql`
-  mutation CreateMessageMutation($input: CreateMessageInput!) {
-    createMessage(input: $input) {
-      message {
-        content
+  mutation LoginMutation($input: LoginInput!) {
+    login(input: $input) {
+      session {
+        token
       }
     }
   }
@@ -15,15 +15,14 @@ let tempID = 0;
 export default {
   commit: (inputVariables, config = {}) => {
     return new Promise((resolve, reject) => {
-      const { userId, threadId, content } = inputVariables;
+      const { email, password } = inputVariables;
       commitMutation(modernEnvironment, {
         mutation,
         variables: {
           input: {
-            userId,
-            threadId,
-            content, 
-            clientMutationId: `createThread${tempID++}`,
+            email,
+            password, 
+            clientMutationId: `login${tempID++}`,
           },
         },
         onCompleted: response => resolve(response),

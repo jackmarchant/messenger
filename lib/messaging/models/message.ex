@@ -16,7 +16,8 @@ defmodule Messaging.Models.Message do
   def changeset(%__MODULE__{} = message, attrs) do
     message
     |> cast(attrs, [:content])
-    |> validate_required([:content])
-    |> cast_assoc(:thread)
+    |> put_assoc(:thread, attrs[:thread])
+    |> put_assoc(:sender, attrs[:sender])
+    |> validate_required([:content, :thread, :sender])
   end
 end

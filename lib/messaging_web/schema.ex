@@ -6,6 +6,7 @@ defmodule MessagingWeb.Schema do
 
   import_types Absinthe.Type.Custom
   import_types Messaging.Schema.Types.Thread
+  import_types Messaging.Schema.Types.Session
 
   alias Messaging.Schema.Resolvers.User, as: UserResolver
   alias Messaging.Schema.Resolvers.Thread, as: ThreadResolver
@@ -32,6 +33,12 @@ defmodule MessagingWeb.Schema do
       resolve &UserResolver.all/2
     end
 
+    field :user, :user do
+      arg :token, :string
+
+      resolve &UserResolver.find_by_token/2
+    end
+
     @desc "A list of threads"
     field :threads, list_of(:thread) do
       arg :user_id, :id
@@ -43,6 +50,7 @@ defmodule MessagingWeb.Schema do
     @desc "A single thread by slug"
     field :thread, :thread do
       arg :slug, :string
+
       resolve &ThreadResolver.find_thread/2
     end
   end
@@ -59,7 +67,7 @@ defmodule MessagingWeb.Schema do
         field :thread, :thread
       end
 
-      middleware ParseIDs, user_id: :user, participants: :user
+      middleware ParseIDs, user_id: :user
       resolve &ThreadResolver.create_thread/2
     end
 
@@ -77,6 +85,32 @@ defmodule MessagingWeb.Schema do
 
       middleware ParseIDs, user_id: :user, thread_id: :thread
       resolve &ThreadResolver.create_message/2
+    end
+
+    @desc "Create a user"
+    payload field :create_user do
+      input do
+        field :firstname, non_null(:string)
+        field :lastname, non_null(:string)
+        field :email, non_null(:string)
+        field :password, non_null(:string)
+      end
+      output do
+        field :user, :user
+      end
+      resolve &UserResolver.create_user/2
+    end
+
+    @desc "User login"
+    payload field :login do
+      input do
+        field :email, non_null(:string)
+        field :password, non_null(:string)
+      end
+      output do
+        field :session, :session
+      end
+      resolve &UserResolver.login/2
     end
   end
 end
