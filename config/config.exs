@@ -32,6 +32,10 @@ config :messaging, Messaging.Repo,
 config :absinthe,
   schema: Messaging.Schema
 
+config :messaging, Messaging.Guardian,
+  issuer: "messaging",
+  secret_key: "S/GpKKwdu2lH6tgSxkvh5EkAc0RorcPOPHkeJIBDEZrjTcJZha1tvXnzzX3kCB2O"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"

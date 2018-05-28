@@ -15,6 +15,9 @@ const createThreadWithUser = (userId, history) => {
 };
 
 const UserList = ({ data, history }) => {
+  if (!data.users) {
+    return null;
+  }
   return (
     <List>
       <Subheader><h2>Contacts</h2></Subheader>

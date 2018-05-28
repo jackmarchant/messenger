@@ -1,66 +1,68 @@
 import React, { Fragment } from 'react';
 import NavLink from 'react-router-dom/NavLink';
+import withRouter from 'react-router-dom/withRouter';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
-import CreateUserMutation from './CreateUserMutation';
+import LoginMutation from './LoginMutation';
 
-class Signup extends React.Component {
+const Error = () => {
+  return (
+    <Fragment>
+      <p>Unable to login. Either your login credentials are incorrect, or the user doesn't exist.</p>
+      <p>If you don't have a login, please <NavLink to="/signup">Sign up</NavLink></p>
+    </Fragment>
+  );
+};
+
+class Login extends React.Component {
   constructor(props) {
     super(props);
-    this.state = this.getInitialState();
+    this.getInitialState = this.getInitialState.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
-    this.getInitialState = this.getInitialState.bind(this);
+    this.state = this.getInitialState();
   }
-
+  
   getInitialState() {
     return {
       email: '',
       password: '',
-      firstname: '',
-      lastname: '',
     };
   }
 
   onSubmit(event) {
+    const { history } = this.props;
     event.preventDefault();
-    CreateUserMutation.commit(this.state)
+    LoginMutation.commit(this.state)
     .then(result => {
-      console.log({ result });
+      if (result.login === null) {
+        return this.setState({ error: "Invalid login credentials or user doesn't exist" });
+      }
+
+      // TODO: change to use context
+      window.localStorage.setItem('SessionToken', result.login.session.token);
       this.setState(this.getInitialState());
+      history.push('/');
     });
     return false;
   }
 
   onChange(key) {
-    return (e, value) => this.setState({[key]: value});
+    return (e, value) => {
+      return this.setState({[key]: value});
+    }
   }
 
   render() {
+    const { email, password, error } = this.state;
+
     return (
       <Fragment>
         <NavLink to="/">Back</NavLink>
         <div>
-          <h2>Sign Up</h2>
+          <h2>Log in</h2>
+          {error && <Error />}
           <form onSubmit={this.onSubmit} autoComplete="off">
-            <TextField
-              autoComplete="off"
-              id="firstname"
-              name="firstname"
-              floatingLabelText="Your first name"
-              fullWidth
-              onChange={this.onChange('firstname')}
-              value={this.state.firstname}
-            />
-            <TextField
-              autoComplete="off"
-              id="lastname"
-              name="lastname"
-              floatingLabelText="Your last name"
-              fullWidth
-              onChange={this.onChange('lastname')}
-              value={this.state.lastname}
-            />
             <TextField
               autoComplete="off"
               id="email"
@@ -68,7 +70,7 @@ class Signup extends React.Component {
               floatingLabelText="Your email"
               fullWidth
               onChange={this.onChange('email')}
-              value={this.state.email}
+              value={email}
               type="email"
             />
             <TextField
@@ -78,7 +80,7 @@ class Signup extends React.Component {
               floatingLabelText="Your password"
               fullWidth
               onChange={this.onChange('password')}
-              value={this.state.password}
+              value={password}
               type="password"
             />
             <RaisedButton primary type="submit" onClick={this.onSubmit}>Submit</RaisedButton>
@@ -89,4 +91,4 @@ class Signup extends React.Component {
   }
 }
 
-export default Signup;
+export default withRouter(Login);

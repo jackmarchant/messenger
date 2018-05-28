@@ -4,7 +4,7 @@ defmodule Messaging.Schema.Resolvers.Thread do
 
   import Ecto.Query
 
-  def find_thread(%{slug: slug}, _) do
+  def find_thread(%{slug: slug}, %{context: %{current_user: _current_user}}) do
     thread =
       Thread
       |> where([t], t.slug == ^slug)
@@ -12,8 +12,11 @@ defmodule Messaging.Schema.Resolvers.Thread do
 
     {:ok, thread}
   end
+  def find_thread(_, _) do
+    {:error, "Not authorised"}
+  end
 
-  def all(%{user_id: user_id}, _) do
+  def all(%{user_id: user_id}, %{context: %{current_user: _current_user}}) do
     uid = String.to_integer(user_id)
     threads =
       Thread
@@ -27,13 +30,8 @@ defmodule Messaging.Schema.Resolvers.Thread do
 
     {:ok, threads}
   end
-
   def all(_, _) do
-    threads =
-      Thread
-      |> Repo.all()
-
-    {:ok, threads}
+    {:error, "Not authorised"}
   end
 
   def create_thread(%{user_id: creator_id, participants: participants}, _) do

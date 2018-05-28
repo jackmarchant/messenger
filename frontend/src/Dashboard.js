@@ -3,10 +3,15 @@ import UserList from './UserList';
 import ThreadList from './ThreadList';
 import { Link } from 'react-router-dom';
 
-const Dashboard = ({ data }) => {
+const Dashboard = ({ data, isAuthenticated }) => {
   return (
     <Fragment>
-      <Link to="/signup">Sign Up</Link>
+      {isAuthenticated === false && (
+        <Fragment>
+          <Link to="/signup">Sign up</Link>
+          <Link to="/login">Log in</Link>
+        </Fragment>
+      )}
       <ThreadList data={data} />
       <UserList data={data} />
     </Fragment>

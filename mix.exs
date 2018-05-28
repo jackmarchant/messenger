@@ -53,6 +53,7 @@ defmodule Messaging.Mixfile do
       {:ex_machina, "~> 2.1", only: :test},
       {:bcrypt_elixir, "~> 1.0"},
       {:comeonin, "~> 4.0"},
+      {:guardian, "~> 1.0"},
     ]
   end
 

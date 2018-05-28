@@ -7,7 +7,8 @@ defmodule Messaging.Models.User do
 
   schema "user" do
     field :email, :string
-    field :password, :string
+    field :password, :string, virtual: true
+    field :password_hash, :string
     field :firstname, :string
     field :lastname, :string
     field :role, :string
@@ -22,6 +23,15 @@ defmodule Messaging.Models.User do
     |> cast(attrs, [:email, :firstname, :lastname, :role, :password])
     |> validate_required([:email, :firstname, :lastname, :role, :password])
     |> unique_constraint(:email)
-    |> update_change(:password, &Bcrypt.hashpwsalt/1)
+    |> generate_password_hash()
+  end
+
+  defp generate_password_hash(changeset) do
+    case changeset do
+      %Ecto.Changeset{valid?: true, changes: %{password: password}} ->
+        put_change(changeset, :password_hash, Bcrypt.hashpwsalt(password))
+      _ ->
+        changeset
+    end
   end
 end

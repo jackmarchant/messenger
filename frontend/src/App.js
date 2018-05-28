@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import './App.css';
 
 import { graphql, QueryRenderer } from 'react-relay';
@@ -13,38 +13,70 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Dashboard from './Dashboard';
 import Thread from './Thread';
 import Signup from './Signup';
+import Login from './Login';
 
+const sessionToken = window.localStorage.getItem('SessionToken');
 class App extends Component {
   constructor(props) {
     super(props);
     this.initialState = getStateFromDOM('app-state');
+    this.state = {
+      isAuthenticated: !!sessionToken,
+      user: props.data.user,
+    };
+    this.onAuthentication = this.onAuthentication.bind(this);
   }
+
+  onAuthentication(user) {
+    this.setState({
+      user,
+      isAuthenticated: true,
+    });
+  }
+
   render() {
     const { data } = this.props;
+    const { user, isAuthenticated } = this.state;
     return (
       <BrowserRouter basename={this.initialState.basename}>
         <MuiThemeProvider>
           <div className="App">
             <header className="App-header">
               <h1 className="App-title">Messenger</h1>
+              <p>Welcome {user.firstname}{' '}{user.lastname}</p>
             </header>
             <div className="container">
               <Switch>
-                <Route
-                  exact
-                  path="/"
-                  render={() => <Dashboard data={data} />}
-                />
-                <Route
-                  exact
-                  path="/signup"
-                  render={() => <Signup />}
-                />
-                <Route
-                  exact
-                  path="/thread/:slug"
-                  render={Thread}
-                />
+                {
+                  isAuthenticated &&
+                  <Fragment>
+                    <Route
+                      exact
+                      path="/"
+                      render={() => <Dashboard data={data} isAuthenticated={isAuthenticated} />}
+                    />
+                    <Route
+                      exact
+                      path="/thread/:slug"
+                      render={props => <Thread userId={user.id} {...props} />}
+                    />
+                  </Fragment>
+                }
+                {
+                  this.state.isAuthenticated === false &&
+                  <Fragment>
+                    <Route
+                      exact
+                      path="/signup"
+                      render={() => <Signup />}
+                    />
+                    <Route
+                      exact
+                      path="/login"
+                      render={() => <Login onAuthentication={this.onAuthentication} />}
+                    />
+                  </Fragment>
+                }
               </Switch>
             </div>
           </div>
@@ -56,9 +88,15 @@ class App extends Component {
 
 
 const query = graphql`
-  query AppQuery {
+  query AppQuery($token: String!) {
     ...UserList
     ...ThreadList
+    user(token: $token) {
+      id
+      firstname
+      lastname
+      email
+    }
   }
 `;
 
@@ -79,7 +117,7 @@ class AppRenderer extends Component {
       <QueryRenderer
         environment={modernEnvironment}
         query={query}
-        variables={{}}
+        variables={{ token: sessionToken }}
         render={RelayRenderContainer(renderProps => {
           return <App {...renderProps} />;
         })}
